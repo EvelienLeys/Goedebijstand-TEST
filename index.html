@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alle Locaties — De Wereld van de Goede Bijstand</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0d1b2a;
+      --sepia:     #2c4a6e;
+      --paper:     #e8f0f7;
+      --parchment: #d4e4f0;
+      --cream:     #f0f6fb;
+      --rule:      #7aaac8;
+      --gold:      #3a7bbf;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .lang-bar {
+      background: var(--ink);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 20px;
+      gap: 2px;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .lang-label {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--rule);
+      margin-right: 10px;
+      padding: 10px 0;
+      opacity: 0.7;
+    }
+
+    .lang-btn {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rule);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 10px 12px;
+      border-bottom: 3px solid transparent;
+      transition: color 0.18s, border-color 0.18s, background 0.18s;
+      position: relative;
+      top: 2px;
+    }
+
+    .lang-btn:hover { color: var(--paper); background: rgba(255,255,255,0.05); }
+    .lang-btn.active { color: #fff; border-bottom-color: var(--gold); }
+
+    header {
+      background: var(--ink);
+      color: var(--paper);
+      text-align: center;
+      padding: 36px 24px 28px;
+      border-bottom: 4px solid var(--gold);
+    }
+
+    .header-kicker {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rule);
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      line-height: 1.2;
+      color: var(--paper);
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--rule);
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      padding: 14px;
+      background: var(--parchment);
+      border-bottom: 1px solid var(--rule);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      text-decoration: none;
+    }
+    .back-link:hover { background: var(--ink); color: var(--paper); }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+
+    .continent-block { margin-bottom: 52px; }
+
+    .continent-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .continent-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px var(--rule);
+    }
+
+    .continent-header h2 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+      flex: 1;
+    }
+
+    .continent-count {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      border-left: 1px solid var(--rule);
+    }
+
+    .location-item {
+      padding: 9px 14px;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 0.95rem;
+      color: var(--sepia);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .location-item:hover { background: var(--parchment); color: var(--ink); }
+    .location-item::before {
+      content: '·';
+      color: var(--gold);
+      font-size: 1.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    footer {
+      background: var(--ink);
+      color: var(--rule);
+      text-align: center;
+      padding: 24px;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+
+    @media (max-width: 480px) {
+      .location-grid { grid-template-columns: 1fr 1fr; }
+      .lang-label { display: none; }
+      .lang-btn { padding: 10px 8px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="lang-bar">
+  <span class="lang-label">Taal / Langue / Language</span>
+  <button class="lang-btn active" data-lang="nl">NL</button>
+  <button class="lang-btn" data-lang="fr">FR</button>
+  <button class="lang-btn" data-lang="de">DE</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+  <button class="lang-btn" data-lang="es">ES</button>
+</div>
+
+<header>
+  <div class="header-kicker" id="txt-kicker"></div>
+  <h1 id="txt-title"></h1>
+  <p id="txt-subtitle"></p>
+</header>
+
+<a class="back-link" href="index.html" id="txt-back"></a>
+<main id="locaties"></main>
+<footer id="txt-footer"></footer>
+
+<script>
+const continentColors = {
+  "Afrika": "#1565c0",
+  "Azië & M-O": "#0288d1",
+  "Europa": "#0097a7",
+  "Amerika": "#1976d2",
+};
+
+const CONTINENT_KEYS = ["Afrika", "Azië & M-O", "Europa", "Amerika"];
+
+// Continent assignment per location (index-matched to locationNames arrays)
+const locationContinents = [
+  "Afrika","Afrika","Afrika","Afrika","Afrika","Afrika","Afrika","Afrika","Afrika","Afrika",
+  "Afrika","Afrika","Afrika","Afrika","Afrika","Afrika","Afrika","Afrika","Afrika",
+  "Azië & M-O","Azië & M-O","Azië & M-O","Azië & M-O","Azië & M-O","Azië & M-O",
+  "Azië & M-O","Azië & M-O","Azië & M-O","Azië & M-O","Azië & M-O","Azië & M-O",
+  "Azië & M-O","Azië & M-O","Azië & M-O","Azië & M-O","Azië & M-O",
+  "Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa",
+  "Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa",
+  "Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa",
+  "Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa",
+  "Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa",
+  "Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa",
+  "Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa","Europa",
+  "Europa","Europa","Europa","Europa","Europa",
+  "Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika",
+  "Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika",
+  "Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika",
+  "Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika","Amerika"
+];
+
+const translations = {
+  nl: {
+    kicker: "Een pelgrimage in aarde",
+    title: "Alle Locaties",
+    subtitle: "155 plekken op 6 continenten — de volledige collectie van de Goede Bijstand",
+    back: "← Terug naar de kaart",
+    footer: "Een project van de Goede Bijstand &nbsp;·&nbsp; Bijstandsstraat 5, 1000 Brussel",
+    locationsLabel: "locaties",
+    continents: { "Afrika":"Afrika", "Azië & M-O":"Azië & M-O", "Europa":"Europa", "Amerika":"Amerika" },
+    locationNames: [
+      "Benin","Ouagadougou, Burkina Faso","Gran Canaria, Spanje","Katako-Kindu, Congo",
+      "Wamba, Congo","Zuid-Kivu, Congo","Congo","Egypte","Praia, Kaapverdië",
+      "Nador, Marokko","Marrakesh, Marokko","Ouarzazate, Marokko","Driouch, Marokko",
+      "Oeganda","Kigali, Rwanda","Seychellen","Togo","Witsand, Zuid-Afrika",
+      "Willowmore, Zuid-Afrika","Myanmar","Nanning, China","Troodos, Cyprus",
+      "Delhi, India","Madhya Pradesh, India","Prayagraj, India","Teheran, Iran",
+      "Jeruzalem, Israël","Dode Zee, Jordanië","Libanon","Nepal","Palestina",
+      "Colombo, Sri Lanka","Thailand","Vietnam","Istanbul, Turkije","Bozjom, Georgië",
+      "Oostende, België","Postel, België","Kopenhagen, Denemarken","Ribe, Denemarken",
+      "Lindet Skov, Denemarken","Keulen, Duitsland","Freiburg, Duitsland",
+      "Colchester, Engeland","Londen, Engeland","Derwent Water, Engeland",
+      "Kallislaki, Finland","Roquetaillade, Frankrijk","Corsica, Frankrijk",
+      "Colmar, Frankrijk","Dijon, Frankrijk","Fontenay, Frankrijk","Grenoble, Frankrijk",
+      "Lyon, Frankrijk","Nice, Frankrijk","Puy de Dôme, Frankrijk","Mulhouse, Frankrijk",
+      "Thessaloniki, Griekenland","Vergina, Griekenland","Keszthely, Hongarije",
+      "Dublin, Ierland","Rosslare, Ierland","Diamond Beach, IJsland","Dolomieten, Italië",
+      "Etna, Italië","San Remo, Italië","Rome, Italië","Stelvio, Italië",
+      "Trapani, Italië","Venetië, Italië","Vesuvius, Italië","Zuid-Tirol, Italië",
+      "Gardameer, Italië","Assisi, Italië","Dubrovnik, Kroatië","Varaždin, Kroatië",
+      "Dalmatia, Kroatië","Poreč, Kroatië","Malta","Monaco","Rotterdam, Nederland",
+      "Gardnos, Noorwegen","Ifnefoss, Noorwegen","Lillehammer, Noorwegen",
+      "Norefjell, Noorwegen","Oslo, Noorwegen","Steindalfoss, Noorwegen",
+      "Wenen, Oostenrijk","Krakau, Polen","Zgorzelec, Polen","Madeira, Portugal",
+      "Santiago do Cacém, Portugal","Braga, Portugal","Ponte de Lima, Portugal",
+      "Boekarest, Roemenië","Sint-Petersburg, Rusland","Ben Nevis, Schotland",
+      "Isle of Skye, Schotland","Loch Ness, Schotland","Lockerbie, Schotland",
+      "Port Achan, Schotland","Tighnabruaich, Schotland","Barcelona, Spanje",
+      "Gerona, Spanje","Granada, Spanje","Valga, Spanje","Zaragoza, Spanje",
+      "La Rioja, Spanje","Praag, Tsjechië","Karlsbad, Tsjechië","Brechfa, Wales",
+      "Brecon Beacons, Wales","Veberöd, Zweden","Bayou la Batre, Alabama",
+      "Robertsdale, Alabama","Lockesburg, Arkansas","Texarkana, Arkansas",
+      "Montréal, Canada","Niagara Falls, Canada","Cayman Eilanden","Cuba",
+      "Curaçao","Klein Curaçao","Dominicaanse Republiek","Lee, Florida",
+      "Alto, Georgia","Montego Bay, Jamaica","Ferryday, Louisiana","Gilliam, Louisiana",
+      "Biloxi, Mississippi","Natchez, Mississippi","Akumal, Mexico",
+      "Albuquerque, New Mexico","Santa Fe, New Mexico","New York City",
+      "Smoky Mountains, North Carolina","Waynesville, North Carolina",
+      "Elk City, Oklahoma","Oklahoma City, Oklahoma","Panama City",
+      "Charleston, South Carolina","Holly Hill, South Carolina","Gatlinburg, Tennessee",
+      "Kellerville, Texas","Wildorado, Texas","Brazilië","Cusco, Peru","Arequipa, Peru"
+    ]
+  },
+
+  fr: {
+    kicker: "Un pèlerinage sur terre",
+    title: "Tous les Sites",
+    subtitle: "155 lieux sur 6 continents — la collection complète de la Bonne Assistance",
+    back: "← Retour à la carte",
+    footer: "Un projet de la Bonne Assistance &nbsp;·&nbsp; Rue de l'Assistance 5, 1000 Bruxelles",
+    locationsLabel: "sites",
+    continents: { "Afrika":"Afrique", "Azië & M-O":"Asie & M-O", "Europa":"Europe", "Amerika":"Amérique" },
+    locationNames: [
+      "Bénin","Ouagadougou, Burkina Faso","Grande Canarie, Espagne","Katako-Kindu, Congo",
+      "Wamba, Congo","Sud-Kivu, Congo","Congo","Égypte","Praia, Cap-Vert",
+      "Nador, Maroc","Marrakech, Maroc","Ouarzazate, Maroc","Driouch, Maroc",
+      "Ouganda","Kigali, Rwanda","Seychelles","Togo","Witsand, Afrique du Sud",
+      "Willowmore, Afrique du Sud","Myanmar","Nanning, Chine","Troodos, Chypre",
+      "Delhi, Inde","Madhya Pradesh, Inde","Prayagraj, Inde","Téhéran, Iran",
+      "Jérusalem, Israël","Mer Morte, Jordanie","Liban","Népal","Palestine",
+      "Colombo, Sri Lanka","Thaïlande","Viêt Nam","Istanbul, Turquie","Bozjoumi, Géorgie",
+      "Ostende, Belgique","Postel, Belgique","Copenhague, Danemark","Ribe, Danemark",
+      "Lindet Skov, Danemark","Cologne, Allemagne","Fribourg-en-Brisgau, Allemagne",
+      "Colchester, Angleterre","Londres, Angleterre","Derwent Water, Angleterre",
+      "Kallislaki, Finlande","Roquetaillade, France","Corse, France",
+      "Colmar, France","Dijon, France","Fontenay, France","Grenoble, France",
+      "Lyon, France","Nice, France","Puy de Dôme, France","Mulhouse, France",
+      "Thessalonique, Grèce","Vergina, Grèce","Keszthely, Hongrie",
+      "Dublin, Irlande","Rosslare, Irlande","Diamond Beach, Islande","Dolomites, Italie",
+      "Etna, Italie","San Remo, Italie","Rome, Italie","Stelvio, Italie",
+      "Trapani, Italie","Venise, Italie","Vésuve, Italie","Tyrol du Sud, Italie",
+      "Lac de Garde, Italie","Assise, Italie","Dubrovnik, Croatie","Varaždin, Croatie",
+      "Dalmatie, Croatie","Poreč, Croatie","Malte","Monaco","Rotterdam, Pays-Bas",
+      "Gardnos, Norvège","Ifnefoss, Norvège","Lillehammer, Norvège",
+      "Norefjell, Norvège","Oslo, Norvège","Steindalfoss, Norvège",
+      "Vienne, Autriche","Cracovie, Pologne","Zgorzelec, Pologne","Madère, Portugal",
+      "Santiago do Cacém, Portugal","Braga, Portugal","Ponte de Lima, Portugal",
+      "Bucarest, Roumanie","Saint-Pétersbourg, Russie","Ben Nevis, Écosse",
+      "Isle of Skye, Écosse","Loch Ness, Écosse","Lockerbie, Écosse",
+      "Port Achan, Écosse","Tighnabruaich, Écosse","Barcelone, Espagne",
+      "Gérone, Espagne","Grenade, Espagne","Valga, Espagne","Saragosse, Espagne",
+      "La Rioja, Espagne","Prague, République tchèque","Karlovy Vary, République tchèque",
+      "Brechfa, Pays de Galles","Brecon Beacons, Pays de Galles","Veberöd, Suède",
+      "Bayou la Batre, Alabama","Robertsdale, Alabama","Lockesburg, Arkansas",
+      "Texarkana, Arkansas","Montréal, Canada","Niagara Falls, Canada",
+      "Îles Caïmans","Cuba","Curaçao","Klein Curaçao","République dominicaine",
+      "Lee, Floride","Alto, Géorgie","Montego Bay, Jamaïque",
+      "Ferryday, Louisiane","Gilliam, Louisiane","Biloxi, Mississippi",
+      "Natchez, Mississippi","Akumal, Mexique","Albuquerque, Nouveau-Mexique",
+      "Santa Fe, Nouveau-Mexique","New York City","Smoky Mountains, Caroline du Nord",
+      "Waynesville, Caroline du Nord","Elk City, Oklahoma","Oklahoma City, Oklahoma",
+      "Panama City","Charleston, Caroline du Sud","Holly Hill, Caroline du Sud",
+      "Gatlinburg, Tennessee","Kellerville, Texas","Wildorado, Texas",
+      "Brésil","Cusco, Pérou","Arequipa, Pérou"
+    ]
+  },
+
+  de: {
+    kicker: "Eine Pilgerreise auf Erden",
+    title: "Alle Standorte",
+    subtitle: "155 Orte auf 6 Kontinenten — die vollständige Sammlung der Guten Beistandschaft",
+    back: "← Zurück zur Karte",
+    footer: "Ein Projekt der Guten Beistandschaft &nbsp;·&nbsp; Beistandsstraat 5, 1000 Brüssel",
+    locationsLabel: "Orte",
+    continents: { "Afrika":"Afrika", "Azië & M-O":"Asien & N-O", "Europa":"Europa", "Amerika":"Amerika" },
+    locationNames: [
+      "Benin","Ouagadougou, Burkina Faso","Gran Canaria, Spanien","Katako-Kindu, Kongo",
+      "Wamba, Kongo","Süd-Kivu, Kongo","Kongo","Ägypten","Praia, Kap Verde",
+      "Nador, Marokko","Marrakesch, Marokko","Ouarzazate, Marokko","Driouch, Marokko",
+      "Uganda","Kigali, Ruanda","Seychellen","Togo","Witsand, Südafrika",
+      "Willowmore, Südafrika","Myanmar","Nanning, China","Troodos, Zypern",
+      "Delhi, Indien","Madhya Pradesh, Indien","Prayagraj, Indien","Teheran, Iran",
+      "Jerusalem, Israel","Totes Meer, Jordanien","Libanon","Nepal","Palästina",
+      "Colombo, Sri Lanka","Thailand","Vietnam","Istanbul, Türkei","Bozjomi, Georgien",
+      "Ostende, Belgien","Postel, Belgien","Kopenhagen, Dänemark","Ribe, Dänemark",
+      "Lindet Skov, Dänemark","Köln, Deutschland","Freiburg, Deutschland",
+      "Colchester, England","London, England","Derwent Water, England",
+      "Kallislaki, Finnland","Roquetaillade, Frankreich","Korsika, Frankreich",
+      "Colmar, Frankreich","Dijon, Frankreich","Fontenay, Frankreich","Grenoble, Frankreich",
+      "Lyon, Frankreich","Nizza, Frankreich","Puy de Dôme, Frankreich","Mülhausen, Frankreich",
+      "Thessaloniki, Griechenland","Vergina, Griechenland","Keszthely, Ungarn",
+      "Dublin, Irland","Rosslare, Irland","Diamond Beach, Island","Dolomiten, Italien",
+      "Ätna, Italien","San Remo, Italien","Rom, Italien","Stelvio, Italien",
+      "Trapani, Italien","Venedig, Italien","Vesuv, Italien","Südtirol, Italien",
+      "Gardasee, Italien","Assisi, Italien","Dubrovnik, Kroatien","Varaždin, Kroatien",
+      "Dalmatien, Kroatien","Poreč, Kroatien","Malta","Monaco","Rotterdam, Niederlande",
+      "Gardnos, Norwegen","Ifnefoss, Norwegen","Lillehammer, Norwegen",
+      "Norefjell, Norwegen","Oslo, Norwegen","Steindalfoss, Norwegen",
+      "Wien, Österreich","Krakau, Polen","Zgorzelec, Polen","Madeira, Portugal",
+      "Santiago do Cacém, Portugal","Braga, Portugal","Ponte de Lima, Portugal",
+      "Bukarest, Rumänien","Sankt Petersburg, Russland","Ben Nevis, Schottland",
+      "Isle of Skye, Schottland","Loch Ness, Schottland","Lockerbie, Schottland",
+      "Port Achan, Schottland","Tighnabruaich, Schottland","Barcelona, Spanien",
+      "Girona, Spanien","Granada, Spanien","Valga, Spanien","Saragossa, Spanien",
+      "La Rioja, Spanien","Prag, Tschechien","Karlsbad, Tschechien",
+      "Brechfa, Wales","Brecon Beacons, Wales","Veberöd, Schweden",
+      "Bayou la Batre, Alabama","Robertsdale, Alabama","Lockesburg, Arkansas",
+      "Texarkana, Arkansas","Montréal, Kanada","Niagara Falls, Kanada",
+      "Kaimaninseln","Kuba","Curaçao","Klein Curaçao","Dominikanische Republik",
+      "Lee, Florida","Alto, Georgia","Montego Bay, Jamaika",
+      "Ferryday, Louisiana","Gilliam, Louisiana","Biloxi, Mississippi",
+      "Natchez, Mississippi","Akumal, Mexiko","Albuquerque, New Mexico",
+      "Santa Fe, New Mexico","New York City","Smoky Mountains, North Carolina",
+      "Waynesville, North Carolina","Elk City, Oklahoma","Oklahoma City, Oklahoma",
+      "Panama City","Charleston, South Carolina","Holly Hill, South Carolina",
+      "Gatlinburg, Tennessee","Kellerville, Texas","Wildorado, Texas",
+      "Brasilien","Cusco, Peru","Arequipa, Peru"
+    ]
+  },
+
+  en: {
+    kicker: "A pilgrimage on earth",
+    title: "All Locations",
+    subtitle: "155 places on 6 continents — the complete collection of the Good Assistance",
+    back: "← Back to the map",
+    footer: "A project of the Good Assistance &nbsp;·&nbsp; Bijstandsstraat 5, 1000 Brussels",
+    locationsLabel: "locations",
+    continents: { "Afrika":"Africa", "Azië & M-O":"Asia & M-E", "Europa":"Europe", "Amerika":"Americas" },
+    locationNames: [
+      "Benin","Ouagadougou, Burkina Faso","Gran Canaria, Spain","Katako-Kindu, Congo",
+      "Wamba, Congo","South Kivu, Congo","Congo","Egypt","Praia, Cape Verde",
+      "Nador, Morocco","Marrakesh, Morocco","Ouarzazate, Morocco","Driouch, Morocco",
+      "Uganda","Kigali, Rwanda","Seychelles","Togo","Witsand, South Africa",
+      "Willowmore, South Africa","Myanmar","Nanning, China","Troodos, Cyprus",
+      "Delhi, India","Madhya Pradesh, India","Prayagraj, India","Tehran, Iran",
+      "Jerusalem, Israel","Dead Sea, Jordan","Lebanon","Nepal","Palestine",
+      "Colombo, Sri Lanka","Thailand","Vietnam","Istanbul, Turkey","Borjomi, Georgia",
+      "Ostend, Belgium","Postel, Belgium","Copenhagen, Denmark","Ribe, Denmark",
+      "Lindet Skov, Denmark","Cologne, Germany","Freiburg, Germany",
+      "Colchester, England","London, England","Derwent Water, England",
+      "Kallislaki, Finland","Roquetaillade, France","Corsica, France",
+      "Colmar, France","Dijon, France","Fontenay, France","Grenoble, France",
+      "Lyon, France","Nice, France","Puy de Dôme, France","Mulhouse, France",
+      "Thessaloniki, Greece","Vergina, Greece","Keszthely, Hungary",
+      "Dublin, Ireland","Rosslare, Ireland","Diamond Beach, Iceland","Dolomites, Italy",
+      "Etna, Italy","San Remo, Italy","Rome, Italy","Stelvio, Italy",
+      "Trapani, Italy","Venice, Italy","Vesuvius, Italy","South Tyrol, Italy",
+      "Lake Garda, Italy","Assisi, Italy","Dubrovnik, Croatia","Varaždin, Croatia",
+      "Dalmatia, Croatia","Poreč, Croatia","Malta","Monaco","Rotterdam, Netherlands",
+      "Gardnos, Norway","Ifnefoss, Norway","Lillehammer, Norway",
+      "Norefjell, Norway","Oslo, Norway","Steindalfoss, Norway",
+      "Vienna, Austria","Kraków, Poland","Zgorzelec, Poland","Madeira, Portugal",
+      "Santiago do Cacém, Portugal","Braga, Portugal","Ponte de Lima, Portugal",
+      "Bucharest, Romania","Saint Petersburg, Russia","Ben Nevis, Scotland",
+      "Isle of Skye, Scotland","Loch Ness, Scotland","Lockerbie, Scotland",
+      "Port Achan, Scotland","Tighnabruaich, Scotland","Barcelona, Spain",
+      "Girona, Spain","Granada, Spain","Valga, Spain","Zaragoza, Spain",
+      "La Rioja, Spain","Prague, Czech Republic","Karlsbad, Czech Republic",
+      "Brechfa, Wales","Brecon Beacons, Wales","Veberöd, Sweden",
+      "Bayou la Batre, Alabama","Robertsdale, Alabama","Lockesburg, Arkansas",
+      "Texarkana, Arkansas","Montréal, Canada","Niagara Falls, Canada",
+      "Cayman Islands","Cuba","Curaçao","Klein Curaçao","Dominican Republic",
+      "Lee, Florida","Alto, Georgia","Montego Bay, Jamaica",
+      "Ferryday, Louisiana","Gilliam, Louisiana","Biloxi, Mississippi",
+      "Natchez, Mississippi","Akumal, Mexico","Albuquerque, New Mexico",
+      "Santa Fe, New Mexico","New York City","Smoky Mountains, North Carolina",
+      "Waynesville, North Carolina","Elk City, Oklahoma","Oklahoma City, Oklahoma",
+      "Panama City","Charleston, South Carolina","Holly Hill, South Carolina",
+      "Gatlinburg, Tennessee","Kellerville, Texas","Wildorado, Texas",
+      "Brazil","Cusco, Peru","Arequipa, Peru"
+    ]
+  },
+
+  es: {
+    kicker: "Una peregrinación en la tierra",
+    title: "Todas las Ubicaciones",
+    subtitle: "155 lugares en 6 continentes — la colección completa de la Buena Asistencia",
+    back: "← Volver al mapa",
+    footer: "Un proyecto de la Buena Asistencia &nbsp;·&nbsp; Bijstandsstraat 5, 1000 Bruselas",
+    locationsLabel: "lugares",
+    continents: { "Afrika":"África", "Azië & M-O":"Asia y O-M", "Europa":"Europa", "Amerika":"América" },
+    locationNames: [
+      "Benín","Ouagadougou, Burkina Faso","Gran Canaria, España","Katako-Kindu, Congo",
+      "Wamba, Congo","Kivu del Sur, Congo","Congo","Egipto","Praia, Cabo Verde",
+      "Nador, Marruecos","Marrakech, Marruecos","Ouarzazate, Marruecos","Driouch, Marruecos",
+      "Uganda","Kigali, Ruanda","Seychelles","Togo","Witsand, Sudáfrica",
+      "Willowmore, Sudáfrica","Myanmar","Nanning, China","Troodos, Chipre",
+      "Delhi, India","Madhya Pradesh, India","Prayagraj, India","Teherán, Irán",
+      "Jerusalén, Israel","Mar Muerto, Jordania","Líbano","Nepal","Palestina",
+      "Colombo, Sri Lanka","Tailandia","Vietnam","Estambul, Turquía","Borjomi, Georgia",
+      "Ostende, Bélgica","Postel, Bélgica","Copenhague, Dinamarca","Ribe, Dinamarca",
+      "Lindet Skov, Dinamarca","Colonia, Alemania","Friburgo, Alemania",
+      "Colchester, Inglaterra","Londres, Inglaterra","Derwent Water, Inglaterra",
+      "Kallislaki, Finlandia","Roquetaillade, Francia","Córcega, Francia",
+      "Colmar, Francia","Dijon, Francia","Fontenay, Francia","Grenoble, Francia",
+      "Lyon, Francia","Niza, Francia","Puy de Dôme, Francia","Mulhouse, Francia",
+      "Tesalónica, Grecia","Vergina, Grecia","Keszthely, Hungría",
+      "Dublín, Irlanda","Rosslare, Irlanda","Diamond Beach, Islandia","Dolomitas, Italia",
+      "Etna, Italia","San Remo, Italia","Roma, Italia","Stelvio, Italia",
+      "Trápani, Italia","Venecia, Italia","Vesubio, Italia","Tirol del Sur, Italia",
+      "Lago de Garda, Italia","Asís, Italia","Dubrovnik, Croacia","Varaždin, Croacia",
+      "Dalmacia, Croacia","Poreč, Croacia","Malta","Mónaco","Róterdam, Países Bajos",
+      "Gardnos, Noruega","Ifnefoss, Noruega","Lillehammer, Noruega",
+      "Norefjell, Noruega","Oslo, Noruega","Steindalfoss, Noruega",
+      "Viena, Austria","Cracovia, Polonia","Zgorzelec, Polonia","Madeira, Portugal",
+      "Santiago do Cacém, Portugal","Braga, Portugal","Ponte de Lima, Portugal",
+      "Bucarest, Rumanía","San Petersburgo, Rusia","Ben Nevis, Escocia",
+      "Isle of Skye, Escocia","Loch Ness, Escocia","Lockerbie, Escocia",
+      "Port Achan, Escocia","Tighnabruaich, Escocia","Barcelona, España",
+      "Girona, España","Granada, España","Valga, España","Zaragoza, España",
+      "La Rioja, España","Praga, República Checa","Karlsbad, República Checa",
+      "Brechfa, Gales","Brecon Beacons, Gales","Veberöd, Suecia",
+      "Bayou la Batre, Alabama","Robertsdale, Alabama","Lockesburg, Arkansas",
+      "Texarkana, Arkansas","Montréal, Canadá","Cataratas del Niágara, Canadá",
+      "Islas Caimán","Cuba","Curaçao","Klein Curaçao","República Dominicana",
+      "Lee, Florida","Alto, Georgia","Montego Bay, Jamaica",
+      "Ferryday, Luisiana","Gilliam, Luisiana","Biloxi, Misisipi",
+      "Natchez, Misisipi","Akumal, México","Albuquerque, Nuevo México",
+      "Santa Fe, Nuevo México","Nueva York","Smoky Mountains, Carolina del Norte",
+      "Waynesville, Carolina del Norte","Elk City, Oklahoma","Oklahoma City, Oklahoma",
+      "Ciudad de Panamá","Charleston, Carolina del Sur","Holly Hill, Carolina del Sur",
+      "Gatlinburg, Tennessee","Kellerville, Texas","Wildorado, Texas",
+      "Brasil","Cusco, Perú","Arequipa, Perú"
+    ]
+  }
+};
+
+/* ── Render ── */
+function applyLanguage(lang) {
+  const t = translations[lang];
+  document.getElementById('txt-kicker').textContent   = t.kicker;
+  document.getElementById('txt-title').textContent    = t.title;
+  document.getElementById('txt-subtitle').textContent = t.subtitle;
+  document.getElementById('txt-back').textContent     = t.back;
+  document.getElementById('txt-footer').innerHTML     = t.footer;
+  document.documentElement.lang = lang;
+
+  const main = document.getElementById('locaties');
+  main.innerHTML = '';
+
+  CONTINENT_KEYS.forEach(key => {
+    const color = continentColors[key];
+    const continentName = t.continents[key] || key;
+    const locs = locationContinents
+      .map((c, i) => ({ continent: c, name: t.locationNames[i] }))
+      .filter(l => l.continent === key);
+
+    if (!locs.length) return;
+
+    const block = document.createElement('div');
+    block.className = 'continent-block';
+    block.innerHTML = `
+      <div class="continent-header">
+        <span class="continent-dot" style="background:${color}"></span>
+        <h2>${continentName}</h2>
+        <span class="continent-count">${locs.length} ${t.locationsLabel}</span>
+      </div>
+      <div class="location-grid">
+        ${locs.map(l => `<div class="location-item">${l.name}</div>`).join('')}
+      </div>
+    `;
+    main.appendChild(block);
+  });
+}
+
+/* ── Init ── */
+applyLanguage('nl');
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b === btn));
+    applyLanguage(btn.dataset.lang);
+  });
+});
+</script>
+</body>
+</html>
